@@ -1,6 +1,8 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:restourant_app/screens/home_page.dart';
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -49,7 +51,7 @@ class LoginPage extends StatelessWidget {
                         _buildPassword(),
                         SizedBox(height: 10),
                         _buildForgotPassBtn(),
-                        _buildLoginBtn(),
+                        _buildLoginBtn(context),
                         _buildSignupBtn(),
                         SizedBox(height: 50),
                         _buildWithSocialMedia()
@@ -134,7 +136,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginBtn() {
+  Widget _buildLoginBtn(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25),
       width: double.infinity,
@@ -153,7 +155,9 @@ class LoginPage extends StatelessWidget {
             letterSpacing: 2,
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+        },
       ),
     );
   }
