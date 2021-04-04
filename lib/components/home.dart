@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
 import 'package:restourant_app/components/shooping.dart';
@@ -14,20 +15,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Food> foods = [
     Food("Urfa Kebap", "Acısız yanında bulgur pilavı köz biber ve domates. ",
-        true, "assets/slider/urfa_kebap.jpg", 27.00, "10-15 Dakika"),
+        true, "assets/slider/urfa_kebap.jpg", 27.00, "10-15 DK"),
     Food(
         "Karışık Kebap",
         "Tüm kebap ürünlreinden azar azar koyularak hazırlanır. ",
         true,
         "assets/slider/karisik.jpg",
         60.00,
-        "20-30 Dakika"),
+        "20-30 DK"),
     Food("Çöp Şiş", "Dana antrikot kullanılarak hazırlanır. ", true,
-        "assets/slider/cop_sis.jpg", 32.00, "20-30 Dakika"),
+        "assets/slider/cop_sis.jpg", 32.00, "20-30 DK"),
     Food("Kıymalı Pide", "Mevsime göre yanında salata ile servis edilir. ",
-        true, "assets/slider/kiymali_pide.jpg", 23.00, "20-30 Dakika"),
+        true, "assets/slider/kiymali_pide.jpg", 23.00, "20-30 DK"),
     Food("Tombik Döner", "Kendi hazırladığımız tombik ekmeğe yapılır. ", true,
-        "assets/slider/et_doner.jpg", 15.00, "20-30 Dakika"),
+        "assets/slider/et_doner.jpg", 15.00, "20-30 DK"),
   ];
   @override
   void initState() {
@@ -146,7 +147,7 @@ class _HomeState extends State<Home> {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           return Container(
-            height: 480,
+            height: 500,
             child: Container(
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -190,6 +191,8 @@ class _HomeState extends State<Home> {
                   ),
                   Container(
                     child: TextField(
+                      maxLength: 30,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       controller: _customerDetailsStr,
                       decoration: InputDecoration(
                         hintText: 'Soğansız, Bibersiz vb...',
