@@ -348,6 +348,7 @@ class _HomeState extends State<Home> {
                             child: ElevatedButton(
                               onPressed: (){
                                 _btmSheetfood.customerDetailsStr=_customerDetailsStr.text;
+                                _btmSheetfood.price=_btmSheetfood.price* _count;
                                 addToCart(_count,_btmSheetfood);
                                 Navigator.pop(context);
                               },
