@@ -1,7 +1,10 @@
+import 'dart:ui';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
+import 'package:restourant_app/components/shooping.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,16 +12,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Food> foods = [];
-
+  List<Food> foods = [
+    Food("Urfa Kebap", "Acısız yanında bulgur pilavı köz biber ve domates. ",
+        true, "assets/slider/urfa_kebap.jpg", 27.00, "10-15 Dakika"),
+    Food(
+        "Karışık Kebap",
+        "Tüm kebap ürünlreinden azar azar koyularak hazırlanır. ",
+        true,
+        "assets/slider/karisik.jpg",
+        60.00,
+        "20-30 Dakika"),
+    Food("Çöp Şiş", "Dana antrikot kullanılarak hazırlanır. ", true,
+        "assets/slider/cop_sis.jpg", 32.00, "20-30 Dakika"),
+    Food("Kıymalı Pide", "Mevsime göre yanında salata ile servis edilir. ",
+        true, "assets/slider/kiymali_pide.jpg", 23.00, "20-30 Dakika"),
+    Food("Tombik Döner", "Kendi hazırladığımız tombik ekmeğe yapılır. ", true,
+        "assets/slider/et_doner.jpg", 15.00, "20-30 Dakika"),
+  ];
   @override
   void initState() {
     // TODO: implement initState
+    Shopping();
     super.initState();
-    foods.add(
-      Food("Urfa Kebap", "Acısız yanında bulgur pilavı köz biber ve domates. ",
-          true, "assets/slider/urfa_kebap.jpg", 27.00, "10-15 Dakika"),
-    );
   }
 
   @override
@@ -41,11 +56,13 @@ class _HomeState extends State<Home> {
                   SizedBox(height: 10),
                   buildMostPraferedItem(foods[0]),
                   SizedBox(height: 10),
-                  buildMostPraferedItem(foods[0]),
+                  buildMostPraferedItem(foods[1]),
                   SizedBox(height: 10),
-                  buildMostPraferedItem(foods[0]),
+                  buildMostPraferedItem(foods[2]),
                   SizedBox(height: 10),
-                  buildMostPraferedItem(foods[0]),
+                  buildMostPraferedItem(foods[3]),
+                  SizedBox(height: 10),
+                  buildMostPraferedItem(foods[4]),
                   SizedBox(height: 10),
                 ],
               ),
@@ -73,7 +90,7 @@ class _HomeState extends State<Home> {
           subtitle: Text(food.description),
           trailing: Text(food.price.toString() + ' ₺'),
           leading: Image(
-            image: AssetImage('assets/slider/urfa_kebap.jpg'),
+            image: AssetImage(food.image),
           ),
           contentPadding: EdgeInsets.only(left: 0),
           onTap: () => _showBottomSheet(food),
@@ -118,43 +135,256 @@ class _HomeState extends State<Home> {
   }
 
   _showBottomSheet(Food food) {
+    TextEditingController _customerDetailsStr = TextEditingController();
+    Color portionBtnColor = Color(0xFF8BC34A);
+    int _count = 1;
+    Food _btmSheetfood = food;
     return showModalBottomSheet(
       context: context,
-      backgroundColor: Color(0xFF737373),
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-          ),
-          height: 500,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            height: 480,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
+              ),
+              child: Column(
                 children: [
-                  Text(
-                    food.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _btmSheetfood.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+                      Image(
+                        image: AssetImage(_btmSheetfood.image),
+                        height: 100,
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 20,
+                    color: Colors.black,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Yemek Hakkında Bir Not Belirtebilirsiniz',
+                      style: TextStyle(
+                          fontSize: 16,
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.w700),
                     ),
-
                   ),
-                  Image(
-                    image: AssetImage(food.image),
-                    height: 100,
+                  Container(
+                    child: TextField(
+                      controller: _customerDetailsStr,
+                      decoration: InputDecoration(
+                        hintText: 'Soğansız, Bibersiz vb...',
+                      ),
+                    ),
                   ),
+                  Container(
+                    padding: EdgeInsets.only(bottom: 5, top: 20),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Porsiyon',
+                      style: TextStyle(
+                          fontSize: 16,
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          color: _btmSheetfood.portion == false
+                              ? portionBtnColor
+                              : Colors.white,
+                          child: Text(
+                            '1 Porsiyon',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _btmSheetfood.portion = false;
+                            _btmSheetfood.price = _btmSheetfood.price / 1.5;
+                          });
+                          debugPrint(_btmSheetfood.portion.toString());
+                        },
+                      ),
+                      GestureDetector(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          color: _btmSheetfood.portion == true
+                              ? portionBtnColor
+                              : Colors.white,
+                          child: Text(
+                            '1-5 Porsiyon',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _btmSheetfood.portion = true;
+                            _btmSheetfood.price = _btmSheetfood.price * 1.5;
+                          });
+                          debugPrint(_btmSheetfood.portion.toString());
+                        },
+                      ),
+                    ],
+                  )),
+                  SizedBox(
+                    height: 60,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Fiyat',
+                          style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          (_btmSheetfood.price * _count).toString() + ' ₺',
+                          style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                        (Set<MaterialState> states) {
+                                      return Colors.red;
+                                    },
+                                  ),
+                                ),
+                                child: Icon(Icons.remove_circle),
+                                onPressed: () {
+                                  setState(() {
+                                    if (_count == 1) {
+                                      return null;
+                                    } else {
+                                      _count = _count - 1;
+                                    }
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                _count.toString(),
+                                style: TextStyle(fontSize: 30),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                        (Set<MaterialState> states) {
+                                      return Colors.green;
+                                    },
+                                  ),
+                                ),
+                                child: Icon(Icons.add_circle),
+                                onPressed: () {
+                                  setState(() {
+                                    _count = _count + 1;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                            child: ElevatedButton(
+                              onPressed: (){
+                                _btmSheetfood.customerDetailsStr=_customerDetailsStr.text;
+                                addToCart(_count,_btmSheetfood);
+                                Navigator.pop(context);
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                    return Colors.blueAccent;
+                                  },
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.add_shopping_cart,color: Colors.black,),
+                                  Text('Sepete Ekle',style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18
+                                  ),),
+                                ],
+                              ),
+                            )
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
-              Divider(height: 20,color: Colors.black,),
-              
-            ],
-          ),
-        );
+            ),
+          );
+        });
       },
     );
+  }
+
+  addToCart(int count, Food btmSheetfood) {
+    debugPrint('Count = $count    Food Name = '+btmSheetfood.name+
+        '   Food Portion = '+btmSheetfood.portion.toString()+'    Customer Details = '+btmSheetfood.customerDetailsStr.toString()
+        );
+    Shopping.cartList.add(Cart(food: btmSheetfood,foodCount: count));
+
   }
 }

@@ -1,5 +1,6 @@
 
 
+
 class Food{
 
   String name;
@@ -8,6 +9,8 @@ class Food{
   String image;
   double price;
   String preparationTime;
+  String customerDetailsStr;
+  bool portion=false;
 
 
   Food(this.name,this.description,this.status,this.image,this.price,this.preparationTime);
