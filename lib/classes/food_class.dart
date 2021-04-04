@@ -7,10 +7,10 @@ class Food{
   bool status;
   String image;
   double price;
-  String _preparationTime;
+  String preparationTime;
 
 
-  Food(this.name,this.description,this.status,this.image,this.price,this._preparationTime);
+  Food(this.name,this.description,this.status,this.image,this.price,this.preparationTime);
 
 
 
