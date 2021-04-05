@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:restourant_app/components/adress.dart';
@@ -13,8 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String customer = 'Mehmet';
-  int _index=2;
-  List pageList=[
+  int _index = 2;
+  List pageList = [
     Adress(),
     Menu(),
     Home(),
@@ -24,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.red,
@@ -34,14 +35,21 @@ class _HomePageState extends State<HomePage> {
           actions: [
             GestureDetector(
               child: Padding(
-                child: Icon(Icons.shopping_cart),
+                child: GestureDetector(
+                  child: Icon(Icons.login_outlined),
+                  onTap: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
                 padding: EdgeInsets.only(right: 10),
               ),
               onTap: () => debugPrint("Sepet"),
             )
           ],
         ),
-        bottomNavigationBar:getBottoNavBar(),
+        bottomNavigationBar: getBottoNavBar(),
         body: pageList[_index],
       ),
     );
@@ -67,18 +75,32 @@ class _HomePageState extends State<HomePage> {
           Icons.home,
           color: Colors.white,
         ),
-        Icon(
-          Icons.shopping_cart,
-          color: Colors.white,
+        Stack(
+          children: [
+            Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+            ),
+            Positioned(
+              left: 14,
+                bottom: 8,
+                child: Text(
+              Shopping.cartList.length.toString(),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color:Shopping.cartList.length==0 ? Colors.transparent:Colors.black87),
+            )),
+          ],
         ),
         Icon(
           Icons.settings,
           color: Colors.white,
         ),
       ],
-      onTap: (index){
+      onTap: (index) {
         setState(() {
-          _index=index;
+          _index = index;
         });
       },
     );

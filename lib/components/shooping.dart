@@ -49,6 +49,7 @@ class _ShoppingState extends State<Shopping> {
 
   Container buildCartItems() {
     return Container(
+
       width: double.infinity,
       height: 450,
       //color: Colors.red,
@@ -58,7 +59,9 @@ class _ShoppingState extends State<Shopping> {
               cartList2[index].food.portion == false ? '' : '1.5 Porsiyon';
 
           return Container(
-
+            decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.black54,width: 1))
+            ),
             height: 80,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
