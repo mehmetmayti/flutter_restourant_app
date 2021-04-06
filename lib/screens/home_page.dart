@@ -82,15 +82,19 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             Positioned(
-              left: 14,
+                left: 14,
                 bottom: 8,
                 child: Text(
-              Shopping.cartList.length.toString(),
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color:Shopping.cartList.length==0 ? Colors.transparent:Colors.black87),
-            )),
+                  Shopping.cartList.length.toString(),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Shopping.cartList.length == 0
+                          ? Colors.transparent
+                          : Colors.black87),
+
+                )
+            ),
           ],
         ),
         Icon(
@@ -105,4 +109,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+
 }

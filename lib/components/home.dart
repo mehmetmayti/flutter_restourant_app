@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restourant_app/classes/cart_class.dart';
+import 'package:restourant_app/classes/cart_status_detail_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
 import 'package:restourant_app/components/shooping.dart';
 
@@ -263,6 +264,9 @@ class _HomeState extends State<Home> {
                     height: 60,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black54,width: 1,style: BorderStyle.solid))
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -350,6 +354,7 @@ class _HomeState extends State<Home> {
                                 _btmSheetfood.customerDetailsStr=_customerDetailsStr.text;
                                 _btmSheetfood.price=_btmSheetfood.price* _count;
                                 addToCart(_count,_btmSheetfood);
+
                                 Navigator.pop(context);
                               },
                               style: ButtonStyle(
@@ -389,6 +394,6 @@ class _HomeState extends State<Home> {
         '   Food Portion = '+btmSheetfood.portion.toString()+'    Customer Details = '+btmSheetfood.customerDetailsStr.toString()
         );
     Shopping.cartList.add(Cart(food: btmSheetfood,foodCount: count));
-
+    Shopping.totalPrice=Shopping.totalPrice+btmSheetfood.price.toDouble();
   }
 }

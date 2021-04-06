@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1022148116939",
+    "project_id": "restorant-24ec0",
+    "storage_bucket": "restorant-24ec0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022148116939:android:1f9af20959b33fadb2764e",
+        "android_client_info": {
+          "package_name": "com.mayti.restourant_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022148116939-lugkh3cgc9c7dh4q3u7d9tef4sog23aa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT4RhyYXJRh3uOnfwgKbSQXo9iQkvH7Ak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022148116939-lugkh3cgc9c7dh4q3u7d9tef4sog23aa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
