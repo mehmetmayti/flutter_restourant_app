@@ -1,3 +1,5 @@
+
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -5,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:restourant_app/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:restourant_app/screens/sign_up_page.dart';
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth auth=FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -55,7 +57,7 @@ class LoginPage extends StatelessWidget {
                         SizedBox(height: 10),
                         _buildForgotPassBtn(),
                         _buildLoginBtn(context),
-                        _buildSignupBtn(),
+                        _buildSignupBtn(context),
                         SizedBox(height: 50),
                         _buildWithSocialMedia()
                       ],
@@ -159,16 +161,17 @@ class LoginPage extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
-          signInWithGoogle();
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
         },
       ),
     );
   }
 
-  Widget _buildSignupBtn() {
+  Widget _buildSignupBtn(BuildContext context) {
     return GestureDetector(
-      onTap: () => debugPrint('fasfdas'),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));
+      },
       child: RichText(
         text: TextSpan(children: [
           TextSpan(
@@ -209,7 +212,6 @@ class LoginPage extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              signInWithGoogle();
               print('fsasa');
             },
             child: Image(
@@ -225,44 +227,5 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void firebaseAuth() async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: "mehmetmayti023@gmail.com",
-        password: "123456",
-      );
-      print(userCredential);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-        print(e.code);
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-        print(e.code);
-      }
-    }
-  }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-    print(googleUser);
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    // Create a new credential
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-
-    );
-    print(credential);
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential).then((value){
-      return null;
-      //print(value.user.uid);//bu şekilde
-    });
-  }
 }
