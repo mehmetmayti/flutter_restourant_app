@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:restourant_app/classes/customer.dart';
 import 'package:restourant_app/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,8 +12,8 @@ import 'package:restourant_app/screens/sign_up_page.dart';
 
 
 class LoginPage extends StatelessWidget {
-
-  FirebaseAuth auth=FirebaseAuth.instance;
+  static FirebaseAuth auth=FirebaseAuth.instance;
+  Customer customer;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -162,7 +163,8 @@ class LoginPage extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+          //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+
         },
       ),
     );
@@ -228,5 +230,21 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  
+
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

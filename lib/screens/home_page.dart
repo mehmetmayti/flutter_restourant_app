@@ -1,17 +1,22 @@
 import 'dart:ui';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:restourant_app/classes/customer.dart';
 import 'package:restourant_app/components/adress.dart';
 import 'package:restourant_app/components/customer_settings.dart';
 import 'package:restourant_app/components/home.dart';
 import 'package:restourant_app/components/menu.dart';
 import 'package:restourant_app/components/shooping.dart';
+import 'package:restourant_app/screens/login_page.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 
 class _HomePageState extends State<HomePage> {
   String customer = 'Mehmet';
