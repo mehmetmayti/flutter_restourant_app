@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:restourant_app/classes/customer.dart';
+import 'package:restourant_app/main.dart';
 import 'package:restourant_app/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -14,7 +15,7 @@ class LoginPage extends StatelessWidget {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   GlobalKey<ScaffoldState> _scafoldKey = GlobalKey<ScaffoldState>();
-  static Customer customer;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -170,8 +171,8 @@ class LoginPage extends StatelessWidget {
           if (_email.text == '' || _password.text == '') {
             _showSnackBar('Lütfen alanları eksiksiz doldurun!');
           }
-          _signIn(context);
-          print(customer);
+          _signIn(context).then((value) => _clearTextFiled());
+
         },
       ),
     );
@@ -243,9 +244,9 @@ class LoginPage extends StatelessWidget {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: _email.text, password: _password.text);
       print(userCredential.user.uid);
-      _getCustomer(userCredential.user.uid);
-      //Navigator.push(
-          //context, MaterialPageRoute(builder: (context) => HomePage()));
+      _getCustomer(userCredential.user.uid).then((value) =>
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage())));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         _showSnackBar('Böyle bir hesap bulunumadı.');
@@ -271,14 +272,22 @@ class LoginPage extends StatelessWidget {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        print(documentSnapshot.toString());
-        //customer.name = documentSnapshot['name'].toString();
-        //customer.surName = documentSnapshot['surName'].toString();
-        //customer.emailAdress = documentSnapshot['emailAdress'].toString();
-        //customer.phoneNumber = documentSnapshot['phoneNumber'].toString();
+        Customer _customer=Customer();
+        _customer.name = documentSnapshot['name'].toString();
+        _customer.surName = documentSnapshot['surName'].toString();
+        _customer.emailAdress = documentSnapshot['emailAdress'].toString();
+        _customer.phoneNumber = documentSnapshot['phoneNumber'].toString();
+        print(_customer.name);
+        MyApp.customer=_customer;
+        print(MyApp.customer.name);
       } else {
         _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.');
       }
     });
+  }
+
+  void _clearTextFiled() {
+    _email.text='';
+    _password.text='';
   }
 }

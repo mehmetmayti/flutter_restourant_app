@@ -9,6 +9,7 @@ import 'package:restourant_app/components/customer_settings.dart';
 import 'package:restourant_app/components/home.dart';
 import 'package:restourant_app/components/menu.dart';
 import 'package:restourant_app/components/shooping.dart';
+import 'package:restourant_app/main.dart';
 import 'package:restourant_app/screens/login_page.dart';
 
 
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.red,
           leading: Icon(Icons.person),
-          title: Text("Hoşgeldin ${LoginPage.customer.name}"),
+          title: Text("Hoşgeldin ${MyApp.customer.name}"),
           automaticallyImplyLeading: false,
           actions: [
             GestureDetector(
