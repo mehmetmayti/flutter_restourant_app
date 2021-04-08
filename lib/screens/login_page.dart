@@ -1,5 +1,4 @@
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -10,13 +9,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:restourant_app/screens/sign_up_page.dart';
 
-
 class LoginPage extends StatelessWidget {
-  static FirebaseAuth auth=FirebaseAuth.instance;
-  Customer customer;
+  static FirebaseAuth auth = FirebaseAuth.instance;
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  GlobalKey<ScaffoldState> _scafoldKey = GlobalKey<ScaffoldState>();
+  static Customer customer;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      key: _scafoldKey,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -86,6 +88,7 @@ class LoginPage extends StatelessWidget {
       ),
       height: 60,
       child: TextField(
+        controller: _email,
         keyboardType: TextInputType.emailAddress,
         style: TextStyle(color: Colors.black87, fontSize: 18),
         decoration: InputDecoration(
@@ -113,6 +116,7 @@ class LoginPage extends StatelessWidget {
       ),
       height: 60,
       child: TextField(
+        controller: _password,
         obscureText: true,
         style: TextStyle(color: Colors.black87, fontSize: 18),
         decoration: InputDecoration(
@@ -163,8 +167,11 @@ class LoginPage extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
-
+          if (_email.text == '' || _password.text == '') {
+            _showSnackBar('Lütfen alanları eksiksiz doldurun!');
+          }
+          _signIn(context);
+          print(customer);
         },
       ),
     );
@@ -173,7 +180,8 @@ class LoginPage extends StatelessWidget {
   Widget _buildSignupBtn(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignUp()));
       },
       child: RichText(
         text: TextSpan(children: [
@@ -230,21 +238,47 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  
+  Future<void> _signIn(BuildContext context) async {
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: _email.text, password: _password.text);
+      print(userCredential.user.uid);
+      _getCustomer(userCredential.user.uid);
+      //Navigator.push(
+          //context, MaterialPageRoute(builder: (context) => HomePage()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        _showSnackBar('Böyle bir hesap bulunumadı.');
+      } else if (e.code == 'wrong-password') {
+        _showSnackBar('Parolayı hatalı girdiniz lütfen tekrar deneyin.');
+      } else {
+        _showSnackBar('Lütfen alanları düzgün bir şekilde doldurun');
+      }
+    }
+  }
 
+  _showSnackBar(String value) {
+    ScaffoldMessenger.of(_scafoldKey.currentContext).showSnackBar(new SnackBar(
+      content: new Text(value),
+      duration: Duration(seconds: 2),
+    ));
+  }
 
-
+  Future<void> _getCustomer(String uid) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print(documentSnapshot.toString());
+        //customer.name = documentSnapshot['name'].toString();
+        //customer.surName = documentSnapshot['surName'].toString();
+        //customer.emailAdress = documentSnapshot['emailAdress'].toString();
+        //customer.phoneNumber = documentSnapshot['phoneNumber'].toString();
+      } else {
+        _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.');
+      }
+    });
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

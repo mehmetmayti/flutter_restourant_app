@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  String customer = 'Mehmet';
+
   int _index = 2;
   List pageList = [
     Adress(),
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.red,
           leading: Icon(Icons.person),
-          title: Text("Hoşgeldin $customer"),
+          title: Text("Hoşgeldin ${LoginPage.customer.name}"),
           automaticallyImplyLeading: false,
           actions: [
             GestureDetector(
