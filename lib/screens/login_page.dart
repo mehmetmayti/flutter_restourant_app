@@ -9,8 +9,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:restourant_app/screens/sign_up_page.dart';
 
+
 class LoginPage extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
+
   FirebaseAuth auth=FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -201,7 +202,7 @@ class LoginPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () => debugPrint('Facebook'),
+            onTap: () => print('Facebook'),
             child: Image(
               image: AssetImage(
                 'assets/icons/facebook.png',

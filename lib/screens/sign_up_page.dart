@@ -5,21 +5,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:restourant_app/classes/customer.dart';
+import 'package:restourant_app/screens/login_page.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final FirebaseFirestore _firestore= FirebaseFirestore.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
-
 }
 
-
 class _SignUpState extends State<SignUp> {
-
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _name = TextEditingController();
@@ -28,12 +26,12 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _passwordControl = TextEditingController();
   final TextEditingController _phoneNumber = TextEditingController();
-  bool isAlready=true;
+  bool _clickStatus = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.red,
           title: Text('Kullanıcı Kaydı Oluşturma'),
@@ -105,8 +103,7 @@ class _SignUpState extends State<SignUp> {
                         validator: (String value) {
                           if (value.isEmpty) {
                             return 'Bu alan boş bırakılamaz';
-                          }
-                          else if(value.length<6){
+                          } else if (value.length < 6) {
                             return 'Parola en az 6 karakterden oluşmalıdır';
                           }
                           return null;
@@ -124,8 +121,7 @@ class _SignUpState extends State<SignUp> {
                         validator: (String value) {
                           if (value.isEmpty) {
                             return 'Bu alan boş bırakılamaz';
-                          }
-                          else if(value.length<6){
+                          } else if (value.length < 6) {
                             return 'Parola en az 6 karakterden oluşmalıdır';
                           }
                           return null;
@@ -148,22 +144,43 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      alignment: Alignment.center,
-                      child: SignInButtonBuilder(
-                        icon: Icons.person_add,
-                        backgroundColor: Colors.red,
-                        onPressed: () async {
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: GestureDetector(
+                        onTap: () {
                           if (_formKey.currentState.validate()) {
-                            await _register();
-
+                            _register();
                           }
                         },
-                        text: 'Kayıt Ol',
-                        fontSize: 20,
-                        width: 140,
-                        height: 50,
+                        child: Container(
+                            alignment: Alignment.center,
+                            width: 130,
+                            height: 50,
+                            color: Colors.red,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  child: _clickStatus == false
+                                      ? Icon(
+                                          Icons.person_add,
+                                          color: Colors.white,
+                                        )
+                                      : SpinKitFadingCircle(
+                                          color: Colors.white,
+                                          size: 30,
+                                        ),
+                                ),
+                                Text(
+                                  'Kayıt Ol',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            )),
                       ),
                     ),
                   ],
@@ -174,41 +191,69 @@ class _SignUpState extends State<SignUp> {
         ));
   }
 
+  Future clickStatusChange() {
+    setState(() {
+      _clickStatus = true;
+    });
+  }
+
+  Future<dynamic> buildFutureSpink(String value) async {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value),duration: Duration(milliseconds: 1500),));
+    setState(() {
+      _clickStatus = false;
+    });
+  }
+
   Future<void> _register() async {
+    clickStatusChange();
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailAdress.text,
-          password: _password.text
-      );
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
-      _addUser(users,userCredential.user.uid);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailAdress.text, password: _password.text);
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      _addUser(users, userCredential.user.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-          _showSnackBar('Bu E-posta hesabı zaten kullanılmakta. Lütfen giriş yapın.');
+        _showSnackBar(
+            'Bu E-posta hesabı zaten kullanılmakta. Lütfen giriş yapın.');
       }
     } catch (e) {
-      _showSnackBar('Bir hata oluştu lütfen tekrar deneyi.');
+      _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.');
     }
   }
+
   Future<void> _showSnackBar(String value) async {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value)));
-    Duration(milliseconds: 500);
+    buildFutureSpink(value);
   }
 
-  Future<void> _addUser(CollectionReference users,String id) {
-    return users.doc(id).set({
-      'name':_name.text,
-      'surName':_surName.text,
-      'emailAdress':_emailAdress.text,
-      'phoneNumber':_phoneNumber.text
-    }).then((value) => _showSnackBar('Kayıt başarıyla tamamlandı.')).then((value) => Navigator.pop(context))
-        .catchError((error){
-      _showSnackBar('Bir hata oluştu. Tekrar deneyin\n$error');
-      print(error);
-    });
+  Future<void> _addUser(CollectionReference users, String id) {
+    return users
+        .doc(id)
+        .set({
+          'name': _name.text,
+          'surName': _surName.text,
+          'emailAdress': _emailAdress.text,
+          'phoneNumber': _phoneNumber.text
+        })
+        .then((value) => _showSnackBar(
+            'Kayıt başarıyla tamamlandı. Giriş yapmak için anasayfaya dönebilirsiniz'))
+        .then((value) => _claerTextField())
+        .catchError((error) {
+          _showSnackBar('Bir hata oluştu. Tekrar deneyin\n$error');
+          print(error);
+        });
   }
 
+  _claerTextField() {
+    _name.text='';
+    _surName.text='';
+    _emailAdress.text='';
+    _password.text='';
+    _passwordControl.text='';
+    _phoneNumber.text='';
 
+  }
 }
