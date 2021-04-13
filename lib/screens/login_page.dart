@@ -214,7 +214,8 @@ class LoginPage extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              signInWithGoogle();
+              signInWithGoogle().then((value) => Navigator.push(_scafoldKey.currentContext,
+                  MaterialPageRoute(builder: (context) => HomePage())));
               //_phoneControl();
             },
             child: Image(
@@ -262,20 +263,19 @@ class LoginPage extends StatelessWidget {
     return await FirebaseAuth.instance
         .signInWithCredential(credential)
         .then((value) {
-      _getCustomer(value.user.uid).then((value) => Navigator.push(
-          _scafoldKey.currentContext,
-          MaterialPageRoute(builder: (context) => HomePage())));
+      addUser(value.user.uid, value.user.displayName.split(' ')[0],
+          value.user.displayName.split(' ')[1], value.user.email);
     });
   }
 
-  _showSnackBar(String value) {
+  Future<dynamic> _showSnackBar(String value) async {
     ScaffoldMessenger.of(_scafoldKey.currentContext).showSnackBar(new SnackBar(
       content: new Text(value),
       duration: Duration(seconds: 2),
     ));
   }
 
-  Future<void> _getCustomer(String uid) async {
+  Future<dynamic> _getCustomer(String uid) async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -287,12 +287,11 @@ class LoginPage extends StatelessWidget {
         _customer.surName = documentSnapshot['surName'].toString();
         _customer.emailAdress = documentSnapshot['emailAdress'].toString();
         _customer.phoneNumber = documentSnapshot['phoneNumber'].toString();
-
         print(_customer.name);
         MyApp.customer = _customer;
         print(MyApp.customer.name);
       } else {
-        _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.');
+        _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.!!!');
       }
     });
   }
@@ -300,5 +299,24 @@ class LoginPage extends StatelessWidget {
   void _clearTextFiled() {
     _email.text = '';
     _password.text = '';
+  }
+
+  Future<dynamic> addUser(
+      String id, String name, String surName, String email) async {
+    CollectionReference user = FirebaseFirestore.instance.collection('users');
+    await user.doc(id).get().then((value) {
+      if (value.exists) {
+        return null;
+      } else {
+        user.doc(id).set({
+          'name': name,
+          'surName': surName,
+          'emailAdress': email,
+          'phoneNumber': ''
+        }).catchError(
+            (error) => _showSnackBar('Bir hata oluştu tekrar deneyin!'));
+      }
+    });
+    _getCustomer(id);
   }
 }

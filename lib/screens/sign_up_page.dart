@@ -198,7 +198,10 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<dynamic> buildFutureSpink(String value) async {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value),duration: Duration(milliseconds: 1500),));
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(value),
+      duration: Duration(milliseconds: 1500),
+    ));
     setState(() {
       _clickStatus = false;
     });
@@ -248,12 +251,11 @@ class _SignUpState extends State<SignUp> {
   }
 
   _claerTextField() {
-    _name.text='';
-    _surName.text='';
-    _emailAdress.text='';
-    _password.text='';
-    _passwordControl.text='';
-    _phoneNumber.text='';
-
+    _name.text = '';
+    _surName.text = '';
+    _emailAdress.text = '';
+    _password.text = '';
+    _passwordControl.text = '';
+    _phoneNumber.text = '';
   }
 }
