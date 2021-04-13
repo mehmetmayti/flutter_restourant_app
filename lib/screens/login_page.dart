@@ -259,7 +259,13 @@ class LoginPage extends StatelessWidget {
       idToken: googleAuth.idToken,
     );
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    return await FirebaseAuth.instance
+        .signInWithCredential(credential)
+        .then((value) {
+      _getCustomer(value.user.uid).then((value) => Navigator.push(
+          _scafoldKey.currentContext,
+          MaterialPageRoute(builder: (context) => HomePage())));
+    });
   }
 
   _showSnackBar(String value) {
