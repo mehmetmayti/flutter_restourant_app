@@ -15,6 +15,7 @@ class LoginPage extends StatelessWidget {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   GlobalKey<ScaffoldState> _scafoldKey = GlobalKey<ScaffoldState>();
+  String phoneControl = '';
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +173,6 @@ class LoginPage extends StatelessWidget {
             _showSnackBar('Lütfen alanları eksiksiz doldurun!');
           }
           _signIn(context).then((value) => _clearTextFiled());
-
         },
       ),
     );
@@ -213,18 +213,9 @@ class LoginPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () => print('Facebook'),
-            child: Image(
-              image: AssetImage(
-                'assets/icons/facebook.png',
-              ),
-              width: 60,
-              height: 60,
-            ),
-          ),
-          GestureDetector(
             onTap: () {
-              print('fsasa');
+              signInWithGoogle();
+              //_phoneControl();
             },
             child: Image(
               image: AssetImage(
@@ -244,8 +235,7 @@ class LoginPage extends StatelessWidget {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: _email.text, password: _password.text);
       print(userCredential.user.uid);
-      _getCustomer(userCredential.user.uid).then((value) =>
-      Navigator.push(
+      _getCustomer(userCredential.user.uid).then((value) => Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage())));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -256,6 +246,20 @@ class LoginPage extends StatelessWidget {
         _showSnackBar('Lütfen alanları düzgün bir şekilde doldurun');
       }
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   _showSnackBar(String value) {
@@ -272,13 +276,14 @@ class LoginPage extends StatelessWidget {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        Customer _customer=Customer();
+        Customer _customer = Customer();
         _customer.name = documentSnapshot['name'].toString();
         _customer.surName = documentSnapshot['surName'].toString();
         _customer.emailAdress = documentSnapshot['emailAdress'].toString();
         _customer.phoneNumber = documentSnapshot['phoneNumber'].toString();
+
         print(_customer.name);
-        MyApp.customer=_customer;
+        MyApp.customer = _customer;
         print(MyApp.customer.name);
       } else {
         _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.');
@@ -287,7 +292,7 @@ class LoginPage extends StatelessWidget {
   }
 
   void _clearTextFiled() {
-    _email.text='';
-    _password.text='';
+    _email.text = '';
+    _password.text = '';
   }
 }

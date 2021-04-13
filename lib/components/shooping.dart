@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/cart_status_detail_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
-
 
 class Shopping extends StatefulWidget {
   static List<Cart> cartList = [];
@@ -15,16 +12,13 @@ class Shopping extends StatefulWidget {
   @override
   _ShoppingState createState() =>
       _ShoppingState(cartList, cartStatusDetail, totalPrice);
-
 }
-
 
 class _ShoppingState extends State<Shopping> {
   List<Cart> cartList2 = [];
   CartStatusDetail _cartStatusDetail;
   double _totalPrice = 0;
   _ShoppingState(this.cartList2, this._cartStatusDetail, this._totalPrice);
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +70,7 @@ class _ShoppingState extends State<Shopping> {
                     Container(
                       child: ElevatedButton(
                         style: ButtonStyle(),
+                        onPressed: () {},
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 16),
                           child: Row(
@@ -84,9 +79,7 @@ class _ShoppingState extends State<Shopping> {
                               Icon(Icons.card_travel),
                               Text(
                                 'Sepeti Onayla',
-                                style: TextStyle(
-                                  fontSize: 18
-                                ),
+                                style: TextStyle(fontSize: 18),
                               )
                             ],
                           ),
@@ -169,7 +162,8 @@ class _ShoppingState extends State<Shopping> {
                   ),
                   onTap: () {
                     setState(() {
-                      _totalPrice = _totalPrice - cartList2[index].food.price.toDouble();
+                      _totalPrice =
+                          _totalPrice - cartList2[index].food.price.toDouble();
                       cartList2.removeAt(index);
                     });
                   },
@@ -256,4 +250,3 @@ class _ShoppingState extends State<Shopping> {
     );
   }
 }
-
