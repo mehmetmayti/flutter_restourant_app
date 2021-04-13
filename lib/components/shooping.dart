@@ -5,6 +5,9 @@ import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/cart_status_detail_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
 
+
+
+
 class Shopping extends StatefulWidget {
   static List<Cart> cartList = [];
   static double totalPrice = 0;

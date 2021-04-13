@@ -214,8 +214,7 @@ class LoginPage extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              signInWithGoogle().then((value) => Navigator.push(_scafoldKey.currentContext,
-                  MaterialPageRoute(builder: (context) => HomePage())));
+              signInWithGoogle();
               //_phoneControl();
             },
             child: Image(
@@ -293,7 +292,8 @@ class LoginPage extends StatelessWidget {
       } else {
         _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.!!!');
       }
-    });
+    }).then((value) => Navigator.push(_scafoldKey.currentContext,
+        MaterialPageRoute(builder: (context) => HomePage())));
   }
 
   void _clearTextFiled() {
