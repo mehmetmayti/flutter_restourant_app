@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/cart_status_detail_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
+import 'package:restourant_app/classes/menu_model.dart';
 
 
 
@@ -11,11 +13,13 @@ import 'package:restourant_app/classes/food_class.dart';
 class Shopping extends StatefulWidget {
   static List<Cart> cartList = [];
   static double totalPrice = 0;
-  static CartStatusDetail cartStatusDetail = CartStatusDetail(cartList);
+  static CartStatusDetail cartStatusDetail = CartStatusDetail(cart: cartList);
   @override
   _ShoppingState createState() =>
       _ShoppingState(cartList, cartStatusDetail, totalPrice);
 }
+
+
 
 class _ShoppingState extends State<Shopping> {
   List<Cart> cartList2 = [];
@@ -25,79 +29,83 @@ class _ShoppingState extends State<Shopping> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: buildTitleMyCart(),
-              flex: 1,
-            ),
-            Expanded(
-              child: _cartStatusDetail.status == true || cartList2.length == 0
-                  ? buildEmptyCart()
-                  : buildCartItems(),
-              flex: 9,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                //color: Colors.teal,
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Toplam Ödenecek Fiyat',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '$_totalPrice ₺',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                      ),
-                    ),
-                    Container(
-                      child: ElevatedButton(
-                        style: ButtonStyle(),
-                        onPressed: () {},
+    return Consumer<CartModel>(builder: (context,cartlist,child){
+      return Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: buildTitleMyCart(),
+                flex: 1,
+              ),
+              Expanded(
+                child: _cartStatusDetail.okStatus == true || cartlist.cart.length == 0
+                    ? buildEmptyCart()
+                    : buildCartItems(cartlist.cart),
+                flex: 9,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  //color: Colors.teal,
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
                             children: [
-                              Icon(Icons.card_travel),
                               Text(
-                                'Sepeti Onayla',
-                                style: TextStyle(fontSize: 18),
-                              )
+                                'Toplam Ödenecek Fiyat',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                cartlist.totolPrice.toString()+' ₺',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
                             ],
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                           ),
                         ),
                       ),
-                    )
-                  ],
+                      Container(
+                        child: ElevatedButton(
+                          style: ButtonStyle(),
+                          onPressed: () {},
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(Icons.card_travel),
+                                Text(
+                                  'Sepeti Onayla',
+                                  style: TextStyle(fontSize: 18),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
+                flex: 2,
               ),
-              flex: 2,
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Container buildEmptyCart() => Container(
@@ -112,7 +120,7 @@ class _ShoppingState extends State<Shopping> {
         ),
       );
 
-  Container buildCartItems() {
+  Container buildCartItems(List<Cart> cart) {
     return Container(
       width: double.infinity,
       //height: 450,
@@ -120,7 +128,7 @@ class _ShoppingState extends State<Shopping> {
       child: ListView.builder(
         itemBuilder: (context, index) {
           String portion =
-              cartList2[index].food.portion == false ? '' : '1.5 Porsiyon';
+              cart[index].food.portion == false ? '' : '1.5 Porsiyon';
 
           return Container(
             decoration: BoxDecoration(
@@ -130,32 +138,32 @@ class _ShoppingState extends State<Shopping> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildCartItemImage(index), //Image
-                buildCartItemBody(index, portion), //Body
-                buildCartItemRight(index), //Righth
+                buildCartItemImage(index,cart), //Image
+                buildCartItemBody(index, portion,cart), //Body
+                buildCartItemRight(index,cart), //Righth
               ],
             ),
           );
         },
-        itemCount: cartList2.length,
+        itemCount: cart.length,
       ),
     );
   }
 
-  Expanded buildCartItemRight(int index) {
+  Expanded buildCartItemRight(int index,List<Cart> cart) {
     return Expanded(
       child: Container(
         child: Column(
           children: [
             Text(
-              cartList2[index].foodCount.toString() + ' Adet',
+              cart[index].foodCount.toString() + ' Adet',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  cartList2[index].food.price.toString() + ' ₺',
+                  cart[index].food.price.toString() + ' ₺',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 GestureDetector(
@@ -164,11 +172,10 @@ class _ShoppingState extends State<Shopping> {
                     color: Colors.red,
                   ),
                   onTap: () {
-                    setState(() {
-                      _totalPrice =
-                          _totalPrice - cartList2[index].food.price.toDouble();
-                      cartList2.removeAt(index);
-                    });
+
+                      Provider.of<CartModel>(context,listen: false).setPrice(cart[index].food.price, '-');
+                      Provider.of<CartModel>(context,listen: false).deleteCartItems(index);
+
                   },
                 )
               ],
@@ -183,7 +190,7 @@ class _ShoppingState extends State<Shopping> {
     );
   }
 
-  Expanded buildCartItemBody(int index, String portion) {
+  Expanded buildCartItemBody(int index, String portion,List<Cart> cart) {
     return Expanded(
       child: Container(
         child: Column(
@@ -192,13 +199,13 @@ class _ShoppingState extends State<Shopping> {
           children: [
             Container(
               child: Text(
-                cartList2[index].food.name,
+                cart[index].food.name,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
             Container(
               child: Text(
-                cartList2[index].food.customerDetailsStr,
+                ' '+cart[index].food.customerDetailsStr,
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
               ),
             ),
@@ -213,7 +220,7 @@ class _ShoppingState extends State<Shopping> {
                         Icons.timer_rounded,
                         size: 14,
                       ),
-                      Text(' ' + cartList2[index].food.preparationTime)
+                      Text(' ' + cart[index].food.preparationTime)
                     ],
                   ),
                 ),
@@ -230,11 +237,11 @@ class _ShoppingState extends State<Shopping> {
     );
   }
 
-  Expanded buildCartItemImage(int index) {
+  Expanded buildCartItemImage(int index,List<Cart> cart) {
     return Expanded(
       child: Container(
         child: Image(
-          image: AssetImage(cartList2[index].food.image),
+          image: NetworkImage(cart[index].food.image),
           width: 80,
         ),
         padding: EdgeInsets.only(left: 0, top: 10),

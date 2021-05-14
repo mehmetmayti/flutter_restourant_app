@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,20 +17,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Food> foods = [
     Food("Urfa Kebap", "Acısız yanında bulgur pilavı köz biber ve domates. ",
-        true, "assets/slider/urfa_kebap.jpg", 27.00, "10-15 DK"),
+        true, "assets/slider/urfa_kebap.jpg", 32.00, "10-15 DK"),
     Food(
         "Karışık Kebap",
         "Tüm kebap ürünlreinden azar azar koyularak hazırlanır. ",
         true,
         "assets/slider/karisik.jpg",
-        60.00,
+        32.00,
         "20-30 DK"),
     Food("Çöp Şiş", "Dana antrikot kullanılarak hazırlanır. ", true,
         "assets/slider/cop_sis.jpg", 32.00, "20-30 DK"),
     Food("Kıymalı Pide", "Mevsime göre yanında salata ile servis edilir. ",
-        true, "assets/slider/kiymali_pide.jpg", 23.00, "20-30 DK"),
+        true, "assets/slider/kiymali_pide.jpg", 32.00, "20-30 DK"),
     Food("Tombik Döner", "Kendi hazırladığımız tombik ekmeğe yapılır. ", true,
-        "assets/slider/et_doner.jpg", 15.00, "20-30 DK"),
+        "assets/slider/et_doner.jpg", 32.00, "20-30 DK"),
   ];
   @override
   void initState() {
@@ -216,50 +217,56 @@ class _HomeState extends State<Home> {
                   ),
                   Container(
                       child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          color: _btmSheetfood.portion == false
-                              ? portionBtnColor
-                              : Colors.white,
-                          child: Text(
-                            '1 Porsiyon',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700),
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              color: _btmSheetfood.portion == false
+                                  ? portionBtnColor
+                                  : Colors.white,
+                              child: Text(
+                                '1 Porsiyon',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            onTap: () {
+                              if(_btmSheetfood.portion==true){
+                                setState(() {
+                                  _btmSheetfood.portion = false;
+                                  _btmSheetfood.price =_btmSheetfood.price / 1.5;
+                                });
+                              }
+
+                              debugPrint(_btmSheetfood.portion.toString());
+                            },
                           ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            _btmSheetfood.portion = false;
-                            _btmSheetfood.price = _btmSheetfood.price / 1.5;
-                          });
-                          debugPrint(_btmSheetfood.portion.toString());
-                        },
-                      ),
-                      GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          color: _btmSheetfood.portion == true
-                              ? portionBtnColor
-                              : Colors.white,
-                          child: Text(
-                            '1-5 Porsiyon',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700),
+                          GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              color: _btmSheetfood.portion == true
+                                  ? portionBtnColor
+                                  : Colors.white,
+                              child: Text(
+                                '1-5 Porsiyon',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            onTap: () {
+
+                              if(_btmSheetfood.portion==false){
+                                setState(() {
+                                  _btmSheetfood.portion = true;
+                                  _btmSheetfood.price = _btmSheetfood.price * 1.5;
+                                });
+                              }
+                              debugPrint(_btmSheetfood.portion.toString());
+                            },
                           ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            _btmSheetfood.portion = true;
-                            _btmSheetfood.price = _btmSheetfood.price * 1.5;
-                          });
-                          debugPrint(_btmSheetfood.portion.toString());
-                        },
-                      ),
-                    ],
-                  )),
+                        ],
+                      )),
                   SizedBox(
                     height: 60,
                   ),
@@ -393,7 +400,7 @@ class _HomeState extends State<Home> {
     debugPrint('Count = $count    Food Name = '+btmSheetfood.name+
         '   Food Portion = '+btmSheetfood.portion.toString()+'    Customer Details = '+btmSheetfood.customerDetailsStr.toString()
         );
-    Shopping.cartList.add(Cart(food: btmSheetfood,foodCount: count));
-    Shopping.totalPrice=Shopping.totalPrice+btmSheetfood.price.toDouble();
+    //Shopping.cartList.add(Cart(food: btmSheetfood,foodCount: count));
+    //Shopping.totalPrice=Shopping.totalPrice+btmSheetfood.price;
   }
 }

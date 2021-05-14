@@ -4,9 +4,10 @@ import 'package:restourant_app/classes/cart_class.dart';
 class CartStatusDetail{
 
   List<Cart> cart;
-  bool status=false;
+  bool okStatus;
+  bool orderStatus;
 
 
-  CartStatusDetail(this.cart);
+  CartStatusDetail({this.cart,this.okStatus=false,this.orderStatus=false});
 
 }

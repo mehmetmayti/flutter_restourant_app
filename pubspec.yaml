@@ -37,6 +37,7 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   flutter_spinkit: "^4.1.2"
+  provider: ^5.0.0
 
 
 

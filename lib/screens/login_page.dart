@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restourant_app/classes/customer.dart';
 import 'package:restourant_app/main.dart';
 import 'package:restourant_app/screens/home_page.dart';
@@ -282,13 +283,12 @@ class LoginPage extends StatelessWidget {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         Customer _customer = Customer();
+        _customer.uid=uid;
         _customer.name = documentSnapshot['name'].toString();
         _customer.surName = documentSnapshot['surName'].toString();
         _customer.emailAdress = documentSnapshot['emailAdress'].toString();
         _customer.phoneNumber = documentSnapshot['phoneNumber'].toString();
-        print(_customer.name);
         MyApp.customer = _customer;
-        print(MyApp.customer.name);
       } else {
         _showSnackBar('Bir hata oluştu lütfen tekrar deneyin.!!!');
       }
