@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:restourant_app/classes/address_model.dart';
+import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/customer.dart';
 import 'package:restourant_app/classes/menu_model.dart';
 import 'package:restourant_app/components/adress.dart';
@@ -22,7 +25,6 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-
   int _index = 2;
   List pageList = [
     Adress(),
@@ -31,6 +33,12 @@ class _HomePageState extends State<HomePage> {
     Shopping(),
     CustomerSetings(),
   ];
+  @override
+  void initState() {
+    Provider.of<CartModel>(context,listen: false).getCartItems();
+    Provider.of<AddressModel>(context,listen: false).getAddressList();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -93,11 +101,11 @@ class _HomePageState extends State<HomePage> {
                 left: 14,
                 bottom: 8,
                 child: Text(
-                  Shopping.cartList.length.toString(),
+                  Provider.of<CartModel>(context,listen: false).cart.length.toString(),
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Shopping.cartList.length == 0
+                      color: Provider.of<CartModel>(context,listen: false).cart.length == 0
                           ? Colors.transparent
                           : Colors.black87),
 

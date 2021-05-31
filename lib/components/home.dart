@@ -1,11 +1,9 @@
-import 'dart:ffi';
+
 import 'dart:ui';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:restourant_app/classes/cart_class.dart';
-import 'package:restourant_app/classes/cart_status_detail_class.dart';
 import 'package:restourant_app/classes/food_class.dart';
 import 'package:restourant_app/components/shooping.dart';
 

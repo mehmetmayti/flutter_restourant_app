@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:restourant_app/classes/address_model.dart';
 import 'package:restourant_app/classes/cart_class.dart';
 import 'package:restourant_app/classes/menu_model.dart';
+import 'package:restourant_app/classes/order_model.dart';
 import 'package:restourant_app/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -16,6 +18,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context)=>MenuModel()),
         ChangeNotifierProvider(create: (context)=>CartModel()),
+        ChangeNotifierProvider(create: (context)=>AddressModel()),
+        ChangeNotifierProvider(create: (context)=>OrderModel())
       ],
       child: MyApp(),
     )

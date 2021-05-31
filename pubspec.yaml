@@ -38,6 +38,7 @@ dependencies:
   cloud_firestore:
   flutter_spinkit: "^4.1.2"
   provider: ^5.0.0
+  intl: ^0.16.1
 
 
 

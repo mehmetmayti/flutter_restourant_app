@@ -1,31 +1,25 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:restourant_app/classes/cart_class.dart';
-import 'package:restourant_app/classes/cart_status_detail_class.dart';
-import 'package:restourant_app/classes/food_class.dart';
-import 'package:restourant_app/classes/menu_model.dart';
+import 'package:restourant_app/screens/order_approve.dart';
 
 
 
 
 class Shopping extends StatefulWidget {
-  static List<Cart> cartList = [];
-  static double totalPrice = 0;
-  static CartStatusDetail cartStatusDetail = CartStatusDetail(cart: cartList);
   @override
   _ShoppingState createState() =>
-      _ShoppingState(cartList, cartStatusDetail, totalPrice);
+      _ShoppingState();
 }
 
 
 
 class _ShoppingState extends State<Shopping> {
-  List<Cart> cartList2 = [];
-  CartStatusDetail _cartStatusDetail;
-  double _totalPrice = 0;
-  _ShoppingState(this.cartList2, this._cartStatusDetail, this._totalPrice);
+
+  _ShoppingState();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +35,7 @@ class _ShoppingState extends State<Shopping> {
                 flex: 1,
               ),
               Expanded(
-                child: _cartStatusDetail.okStatus == true || cartlist.cart.length == 0
+                child:cartlist.cart.length == 0
                     ? buildEmptyCart()
                     : buildCartItems(cartlist.cart),
                 flex: 9,
@@ -67,7 +61,7 @@ class _ShoppingState extends State<Shopping> {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                cartlist.totolPrice.toString()+' ₺',
+                                cartlist.getTotalPrice().toString()+' ₺',
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
@@ -80,7 +74,9 @@ class _ShoppingState extends State<Shopping> {
                       Container(
                         child: ElevatedButton(
                           style: ButtonStyle(),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context,MaterialPageRoute(builder: (context)=>OrderApprove()));
+                          },
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 16),
                             child: Row(
